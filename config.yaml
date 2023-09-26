@@ -1,0 +1,37 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: librespeed-app
+  labels:
+    app: librespeed
+spec:
+  containers:
+    - name: librespeed-app
+      image: 'linuxserver/librespeed'
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: librespeed-service
+spec:
+  selector:
+    app: librespeed
+  ports:
+    - port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: librespeed-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: librespeed-service
+                port:
+                  number: 80
+---
